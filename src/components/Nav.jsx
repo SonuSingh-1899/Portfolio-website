@@ -62,8 +62,8 @@ const Nav = ({ isHoveringRef }) => {
   );
 
   return (
-    <div className='bg-transparent flex text-white justify-between items-center px-8'>
-      <span className='text-6xl py-4'>Sonu Singh</span>
+    <div className='bg-transparent flex text-white justify-between items-center relative z-50 px-8'>
+      <span className='text-6xl cursor-pointer py-4'>Sonu Singh</span>
 
       <div className='flex gap-16 py-6 px-3 text-2xl items-center'>
         <AnimatedLink text="Work" index={0} />

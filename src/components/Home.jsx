@@ -1,8 +1,12 @@
 import React, { useEffect } from 'react'
+import video from '../assets/video2.mp4'
+import heross from '../assets/hero.png'
 
 const Home = ({ isHoveringRef }) => {
 
   useEffect(() => {
+    console.log(video);
+    
     const cursor = document.querySelector(".cursor");
     if (!cursor) return;
 
@@ -46,8 +50,12 @@ const Home = ({ isHoveringRef }) => {
   }, [isHoveringRef]);
 
   return (
-    <div className='min-h-screen flex justify-center text-white items-center'>
-      <div className='items-center h-140 w-340'>
+    <div className='min-h-screen flex justify-center text-white items-center relative'>
+      <video autoPlay loop muted playsInline className='fixed top-0 left-0 w-full h-full object-cover z-0' >
+        <source src={video} type='video/mp4' />
+      </video>
+      <div className='fixed top-0 left-0 w-full h-full bg-black/40 -z-10' ></div>
+      <div className='relative z-20 items-center h-140 w-340'>
         <div className='flex items-baseline'>
           <h1 className='text-7xl hover-text cursor-pointer'>I'm a</h1>
           <h1 className='text-9xl hover-text cursor-pointer'>FULL-STACK</h1>
