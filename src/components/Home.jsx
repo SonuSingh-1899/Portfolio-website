@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import video from '../assets/video2.mp4';
+// import video from '../assets/video2.mp4';
+// import video from '../assets/Image_to_Zooming_Code_Video.mp4';
+import video from '../assets/Animation.mp4';
 
 const wordVariant = {
   hidden: { y: 80, opacity: 0 },
