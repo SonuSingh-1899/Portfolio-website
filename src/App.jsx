@@ -6,8 +6,8 @@ import Nav     from "./components/Nav";
 import Home    from "./components/Home";
 import Home3   from "./components/Home3";
 import About   from "./components/About/About";
-import Work    from "./components/work/work";    // ✅ Capital W
-import Contact from "./components/contact/contact"; // ✅ Capital C
+import Work    from "./components/work/work";   
+import Contact from "./components/contact/contact";
 import Intro   from "./Intro";
 import useCursor from "./hooks/useCursor";
 
@@ -35,7 +35,6 @@ function AppContent() {
       ) : (
         <>
           <Nav isHoveringRef={isHoveringRef} />
-          {/* ✅ Route ko Routes ke andar rakha */}
           <Routes>
             <Route path="/"        element={<HomePage isHoveringRef={isHoveringRef} />} />
             <Route path="/work"    element={<Work />} />

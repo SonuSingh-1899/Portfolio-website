@@ -2,10 +2,11 @@ import React from 'react'
 import {motion} from 'framer-motion'
 import SlideButton from '../../hooks/Button'
 import resume from '../../assets/Sonu_Singh_Resume.pdf'
+import img from '../../assets/laptop.jpg'
 
 const About2 = () => {
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center px-4 sm:px-6 py-16 sm:py-24">
+    <div className="min-h-screen bg-black text-white  items-center justify-center px-4 sm:px-6 py-16 sm:py-24">
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -32,6 +33,33 @@ const About2 = () => {
       <div className="flex flex-col mt-4 sm:flex-row justify-center items-center gap-4 sm:gap-6">
         <SlideButton href={resume} label="Go to resume →"/>
       </div>
+    </motion.div>
+    <motion.div
+      className="relative mx-auto flex justify-center w-full overflow-hidden"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+    >
+      {/* Image */}
+      <motion.img
+        src={img}
+        alt="laptop"
+        className="mt-6 rounded-xl shadow-lg relative z-0"
+        initial={{ scale: 1.2 }}
+        whileInView={{ scale: 1 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+      />
+
+      {/* Black Slide Overlay */}
+      <motion.div
+        className="absolute top-0 left-0 w-full h-full bg-black z-10"
+        initial={{ y: 0 }}
+        whileInView={{ y: "100%" }}
+        transition={{
+          duration: 1,
+          ease: [0.77, 0, 0.18, 1], // smooth cinematic
+        }}
+      />
     </motion.div>
   </div>
   )
