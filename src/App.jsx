@@ -23,11 +23,11 @@ function App() {
         <Intro onComplete={() => setShowIntro(false)} />
       ) : (
         <>
-          {/* <Nav isHoveringRef={isHoveringRef} />
+          <Nav isHoveringRef={isHoveringRef} />
           <Home isHoveringRef={isHoveringRef} />
           <Home3 />
-          <About isHoveringRef={isHoveringRef} /> */}
-          <ComingSoon />
+          <About isHoveringRef={isHoveringRef} />
+          {/* <ComingSoon /> */}
         </>
       )}
     </motion.div>
