@@ -16,7 +16,7 @@ const SlideButton = ({ label, onClick, href }) => {
                  px-8 sm:px-10 py-3 sm:py-4
                  text-base sm:text-lg font-semibold
                  border-2 border-white text-white
-                 min-w-35 sm:min-w-40 text-center"
+                 w-full lg:w-60 sm:min-w-40 text-center"
     >
 
       {/* Top text */}

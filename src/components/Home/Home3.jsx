@@ -18,7 +18,7 @@ const Home3 = () => {
       className="max-w-5xl mx-auto w-full"
       >
       {/* Bio text */}
-      <p className="text-center text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl leading-relaxed md:leading-loose text-gray-300 font-light px-2">
+      <p className="text-center text-xl flex-wrap sm:text-lg md:text-xl lg:text-2xl xl:text-3xl leading-relaxed md:leading-loose text-gray-300 font-light px-2">
         I have been working for the past
         <span className="text-white font-bold mx-1">1+ years</span>
         with
@@ -30,7 +30,7 @@ const Home3 = () => {
 
       {/* Divider */}
       <div className="flex justify-center my-10 sm:my-12">
-        <div className="w-20 h-px bg-white" />
+        <div className="w-40 h-px bg-white" />
       </div>
 
       {/* Buttons — stack on mobile, row on sm+ */}
