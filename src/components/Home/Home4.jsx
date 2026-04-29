@@ -65,7 +65,7 @@ const Home4 = () => {
 
         <motion.h1
           variants={wordVariant}
-          className="absolute top-[26%] lg:top-[40%] left-[5%] text-[12vw] md:text-[8vw] hover-text font-sans leading-none"
+          className="absolute top-[26%] lg:top-[50%] left-[5%] text-[12vw] md:text-[8vw] hover-text font-sans leading-none"
         >
           MEETS
         </motion.h1>
@@ -73,7 +73,7 @@ const Home4 = () => {
         {/* INNOVATION */}
         <motion.h1
           variants={wordVariant}
-          className="absolute bottom-[9%] left-[5%] md:bottom-[19%] md:left-[25%] text-[12vw] md:text-[10vw] hover-text font-sans leading-none"
+          className="absolute top-[38%] md:top-auto left-[5%] md:bottom-[9%] md:left-[25%] text-[12vw] md:text-[10vw] hover-text font-sans leading-none"
         >
           INNOVATION
         </motion.h1>

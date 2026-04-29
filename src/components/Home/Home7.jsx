@@ -1,9 +1,36 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import contactimg from '../../assets/contactimage.jpg'
 
 const Home7 = () => {
   const text = "SAY HELLO ! "
   const [hoveredIcon, setHoveredIcon] = useState(null)
+  const [isVisible, setIsVisible] = useState(false)
+  const imageRef = useRef(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect() // Stop observing once visible
+        }
+      },
+      {
+        threshold: 0.3, // Trigger when 30% of the image is visible
+        rootMargin: '0px'
+      }
+    )
+
+    if (imageRef.current) {
+      observer.observe(imageRef.current)
+    }
+
+    return () => {
+      if (imageRef.current) {
+        observer.disconnect()
+      }
+    }
+  }, [])
 
   return (
     <div className="min-h-screen bg-black flex flex-col">
@@ -50,31 +77,16 @@ const Home7 = () => {
 
         {/* Image Container */}
         <div className="w-full md:w-1/2 flex justify-center md:justify-center relative">
-
-          {/* Fixed Lines from Center - Always visible */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" style={{ overflow: 'visible' }}>
-            {/* Line to Top (GitHub) */}
-            <line x1="50%" y1="50%" x2="50%" y2="8%" stroke="#ffffff" strokeWidth="1.5" strokeDasharray="4,4" opacity="0.3"/>
-            
-            {/* Line to Right (Instagram) */}
-            <line x1="50%" y1="50%" x2="92%" y2="50%" stroke="#ffffff" strokeWidth="1.5" strokeDasharray="4,4" opacity="0.3"/>
-            
-            {/* Line to Bottom (WhatsApp) */}
-            <line x1="50%" y1="50%" x2="50%" y2="92%" stroke="#ffffff" strokeWidth="1.5" strokeDasharray="4,4" opacity="0.3"/>
-            
-            {/* Line to Left (Twitter) */}
-            <line x1="50%" y1="50%" x2="8%" y2="50%" stroke="#ffffff" strokeWidth="1.5" strokeDasharray="4,4" opacity="0.3"/>
-          </svg>
-
-          <div className="relative group w-48 sm:w-64 md:w-72 lg:w-80 xl:w-96
-                h-48 sm:h-64 md:h-72 lg:h-80 xl:h-96">
-
+          <div 
+            ref={imageRef}
+            className="relative group w-48 sm:w-64 md:w-72 lg:w-80 xl:w-96
+                h-48 sm:h-64 md:h-72 lg:h-80 xl:h-96"
+          >
             <img
               src={contactimg}
               alt="Contact"
               className="w-full h-full object-cover rounded-lg grayscale
-              group-hover:grayscale-0 transition-all duration-500
-              group-hover:scale-105 relative z-10"
+              group-hover:grayscale-0 transition-all relative z-10"
             />
 
             {/* Top - GitHub */}
@@ -84,9 +96,9 @@ const Home7 = () => {
               rel="noopener noreferrer"
               onMouseEnter={() => setHoveredIcon('github')}
               onMouseLeave={() => setHoveredIcon(null)}
-              className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-6
-              transition-all duration-300 z-20
-              opacity-0 group-hover:opacity-100 group-hover:-translate-y-14"
+              className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-6
+              transition-all duration-1500 z-20
+              ${isVisible ? 'opacity-100 -translate-y-14' : 'opacity-0'}`}
             >
               <div className="bg-white p-2 rounded-full hover:bg-gray-200 transition-colors">
                 <svg width="36" height="36" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000">
@@ -112,9 +124,9 @@ const Home7 = () => {
               rel="noopener noreferrer"
               onMouseEnter={() => setHoveredIcon('instagram')}
               onMouseLeave={() => setHoveredIcon(null)}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6
-              transition-all duration-300 z-20
-              opacity-0 group-hover:opacity-100 group-hover:translate-x-14"
+              className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-6
+              transition-all duration-1500 z-20
+              ${isVisible ? 'opacity-100 translate-x-14' : 'opacity-0'}`}
             >
               <div className="bg-white p-2 rounded-full hover:bg-gray-200 transition-colors">
                 <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -136,9 +148,9 @@ const Home7 = () => {
               rel="noopener noreferrer"
               onMouseEnter={() => setHoveredIcon('whatsapp')}
               onMouseLeave={() => setHoveredIcon(null)}
-              className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-6
-              transition-all duration-300 z-20
-              opacity-0 group-hover:opacity-100 group-hover:translate-y-14"
+              className={`absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-6
+              transition-all duration-[1500ms] z-20
+              ${isVisible ? 'opacity-100 translate-y-14' : 'opacity-0'}`}
             >
               <div className="bg-white p-2 rounded-full hover:bg-gray-200 transition-colors">
                 <svg width="36" height="36" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" fill="#000000">
@@ -168,9 +180,9 @@ const Home7 = () => {
               rel="noopener noreferrer"
               onMouseEnter={() => setHoveredIcon('twitter')}
               onMouseLeave={() => setHoveredIcon(null)}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6
-              transition-all duration-300 z-20
-              opacity-0 group-hover:opacity-100 group-hover:-translate-x-14"
+              className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6
+              transition-all duration-[1500ms] z-20
+              ${isVisible ? 'opacity-100 -translate-x-14' : 'opacity-0'}`}
             >
               <div className="bg-white p-2 rounded-full hover:bg-gray-200 transition-colors">
                 <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -184,7 +196,6 @@ const Home7 = () => {
             </a>
 
           </div>
-
         </div>
 
       </div>

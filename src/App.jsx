@@ -14,6 +14,7 @@ import ScrollToTop from "./hooks/ScrollToTop";
 import Home4 from "./components/Home/Home4";
 import Home5 from "./components/Home/Home5";
 import Home6 from "./components/Home/Home6";
+import Home7 from "./components/Home/Home7";
 
 // Landing page — sab sections ek saath
 const HomePage = ({ isHoveringRef }) => (
@@ -22,7 +23,8 @@ const HomePage = ({ isHoveringRef }) => (
     <Home3 />
     <Home4 />
     <Home5 />
-    <Home6 />
+    {/* <Home6 /> */}
+    <Home7 />
     
   </>
 );
