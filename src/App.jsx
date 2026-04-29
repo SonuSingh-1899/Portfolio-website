@@ -50,7 +50,7 @@ function AppContent() {
             <Route path="/"        element={<HomePage isHoveringRef={isHoveringRef} />} />
             <Route path="/work"    element={<Work />} />
             <Route path="/about"   element={<About isHoveringRef={isHoveringRef} />} />
-            <Route path="/contact" element={<Contact />} />
+            <Route path="/contact" element={<Home7 />} />
           </Routes>
         </>
       )}

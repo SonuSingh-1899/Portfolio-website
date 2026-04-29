@@ -36,7 +36,7 @@ const Home3 = () => {
       {/* Buttons — stack on mobile, row on sm+ */}
       <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6">
         <SlideButton label="Know more →" onClick={() => navigate("/about")} />
-        <SlideButton label="Contact →" />
+        <SlideButton label="Contact →" onClick={() => navigate("/contact")} />
       </div>
     </motion.div>
   </div>

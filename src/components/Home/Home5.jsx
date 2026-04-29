@@ -86,7 +86,6 @@ const Home5 = () => {
       <div className='
         flex flex-col gap-12 sm:gap-16
         px-6 sm:px-12 md:px-0
-        pt-16 sm:pt-20
         md:ml-[40%]
       '>
         {sections.map((section, index) => (
