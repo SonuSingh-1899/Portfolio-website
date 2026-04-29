@@ -51,7 +51,7 @@ const Home7 = () => {
       </div>
 
       <div className="flex flex-col md:flex-row items-center md:items-start
-        gap-10 md:gap-0 my-20 sm:my-24 md:my-32 lg:my-40
+        gap-10 md:gap-0 my-10 sm:my-10 md:my-10 lg:my-10
         px-6 py-8 sm:px-10 sm:py-15 md:px-16 md:py-20 lg:px-20 lg:py-30">
 
         {/* Text */}
