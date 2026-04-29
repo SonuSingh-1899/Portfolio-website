@@ -20,7 +20,6 @@ const Home6 = () => {
         </div>
       </div>
 
-      {/* Content Section */}
       <div className="flex flex-col md:flex-row items-center md:items-start
         gap-10 md:gap-0 mt-16 sm:mt-24 md:mt-32 lg:mt-40
         px-6 py-3 sm:px-10 sm:py-5 md:px-16 md:py-8 lg:px-20 lg:py-10">

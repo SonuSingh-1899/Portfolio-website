@@ -27,10 +27,9 @@ const AnimatedSection = ({ heading, text, showLine }) => {
   }, [])
 
   return (
-    <div ref={wrapperRef} className='flex flex-col gap-6'>
+    <div ref={wrapperRef} className='flex flex-col  gap-6'>
 
       <div className='flex flex-col sm:flex-row gap-6 sm:gap-16'>
-        {/* Heading */}
         <h1
           className='anim-el text-3xl sm:text-4xl sm:w-50 sm:shrink-0
             opacity-0 -translate-x-10 transition-all duration-700 ease-out
@@ -65,7 +64,7 @@ const AnimatedSection = ({ heading, text, showLine }) => {
 const Home5 = () => {
   const sections = [
     {
-      heading: 'development',
+      heading: 'Development',
       text: "From designing backend APIs to crafting responsive frontends, I enjoy working on complete applications. I've built multiple projects that reflect practical problem-solving and real implementation skills.",
       showLine: true,
     },
@@ -75,7 +74,7 @@ const Home5 = () => {
       showLine: true,
     },
     {
-      heading: 'qualification',
+      heading: 'Qualification',
       text: 'I completed my BCA from Subodh College, where I explored multiple programming languages and core computer science concepts. During my journey, I gained exposure to different technologies but chose to focus deeply on Java for building strong backend and application development skills.',
       showLine: true,
     },
@@ -85,7 +84,7 @@ const Home5 = () => {
     <div className='min-h-screen text-white bg-black'>
       <div className='
         flex flex-col gap-12 sm:gap-16
-        px-6 sm:px-12 md:px-0
+        px-6 sm:px-12 md:mt-30 md:px-0
         md:ml-[40%]
       '>
         {sections.map((section, index) => (
