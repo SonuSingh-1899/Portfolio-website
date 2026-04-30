@@ -7,7 +7,8 @@ const Home3 = () => {
 
   const navigate = useNavigate()
   return (
-  <div className="min-h-screen bg-black text-white flex items-center justify-center px-4 sm:px-6  sm:py-24">
+
+  <div className="min-h-screen bg-black text-white flex items-center justify-center px-4 sm:px-6 py-16 sm:py-24">
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
