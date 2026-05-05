@@ -5,7 +5,7 @@ import img from '../../assets/Remove background project (4).png'
 import About2 from './About2'
 import About3 from './About3'
 import { image } from 'framer-motion/client'
-
+import Skills from './Skills'
 const About = () => {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
@@ -13,10 +13,10 @@ const About = () => {
   return (
     <>
       {/* ── ABOUT SECTION ── */}
-      <div ref={ref} className='bg-black min-h-screen text-white relative overflow-hidden'>
+      <div ref={ref} className='bg-black h-auto pb-20 text-white relative overflow-hidden'>
 
         {/* ── MOBILE VIEW ── */}
-        <div className='relative md:hidden'>
+        <div className='relative md:hidden overflow-hidden'>
           <motion.img
             src={img}
             alt="Sonu Singh"
@@ -26,7 +26,7 @@ const About = () => {
             transition={{ duration: 1.4, ease: 'easeOut' }}
           />
           <div className='absolute inset-0 bg-linear-to-t from-black via-black/30 to-transparent' />
-          <div className='absolute bottom-13 left-6 right-6 z-30'>
+          <div className='absolute bottom-3 left-6 right-6 z-30'>
             <motion.h1
               className='text-2xl font-momo italic font-light tracking-widest text-white/80'
               initial={{ opacity: 0, x: -60 }}
@@ -37,7 +37,7 @@ const About = () => {
             </motion.h1>
             <div className='overflow-hidden'>
               <motion.h1
-                className='text-5xl font-sansHero font-bold leading-tight text-white'
+                className='text-5xl  font-sansHero font-bold leading-tight text-white'
                 initial={{ y: '100%' }}
                 animate={inView ? { y: '0%' } : { y: '100%' }}
                 transition={{ duration: 0.6, delay: 0.6, ease: [0.76, 0, 0.24, 1] }}
@@ -78,7 +78,7 @@ const About = () => {
             </motion.h1>
             <div className='overflow-hidden'>
             <motion.h1
-              className="text-[10vw] font-bold md:mb-10 font-sans leading-tight text-white"
+              className="text-[150px] hover-text font-bold leading-none inline-block  font-sans m-0 pb-3 text-white"
               initial={{ y: 80, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{
@@ -97,6 +97,7 @@ const About = () => {
 
       <About2 />
       <About3 />
+      <Skills />
     </>
   )
 }
