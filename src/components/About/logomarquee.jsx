@@ -145,7 +145,7 @@ function Logomarquee() {
         </div>
       </div>;
   };
-  return <div className="h-fit flex items-center justify-center overflow-hidden">
+  return <div className="h-70 flex items-center justify-center overflow-hidden">
       <div className="w-full max-w-6xl flex flex-col gap-y-6">
         <Marquee logos={logos1} />
         <Marquee logos={logos2} direction="reverse" />

@@ -4,7 +4,7 @@ import { tr } from 'framer-motion/client'
 
 const About3 = () => {
   return (
-    <div className='min-h-screen bg-black text-white flex flex-col lg:flex-row items-center justify-center px-6 lg:px-30 pt-0 py-16 gap-10'>
+    <div className='max-h-screen bg-black text-white flex flex-col lg:flex-row items-center justify-center px-6 lg:px-30 pt-0 py-16 gap-10'>
 
       <motion.p
       initial={{opacity: 0,y: 50}}
