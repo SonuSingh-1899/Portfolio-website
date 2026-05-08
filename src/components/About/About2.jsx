@@ -68,6 +68,7 @@ const About2 = () => {
           className="absolute top-0 left-0 w-full h-full bg-black z-10"
           initial={{ y: 0 }}
           whileInView={{ y: "100%" }}
+          viewport={{ once: true }}
           transition={{
             duration: 1,
             ease: [0.77, 0, 0.18, 1],

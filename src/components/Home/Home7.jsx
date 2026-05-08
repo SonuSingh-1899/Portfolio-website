@@ -4,220 +4,302 @@ import github from "../../assets/github.svg";
 import x from "../../assets/twitter-original.svg";
 import whatsapp from "../../assets/whatsapp.svg";
 import insta from "../../assets/instagram.svg";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
-const iconVariants = {
-  top: {
-    hidden: { opacity: 0, x: "-50%", y: 0, scale: 0.8 },
-    visible: { opacity: 1, x: "-50%", y: -56, scale: 1 },
-  },
-  right: {
-    hidden: { opacity: 0, x: 0, y: "-50%", scale: 0.8 },
-    visible: { opacity: 1, x: 56, y: "-50%", scale: 1 },
-  },
-  bottom: {
-    hidden: { opacity: 0, x: "-50%", y: 0, scale: 0.8 },
-    visible: { opacity: 1, x: "-50%", y: 56, scale: 1 },
-  },
-  left: {
-    hidden: { opacity: 0, x: 0, y: "-50%", scale: 0.8 },
-    visible: { opacity: 1, x: -56, y: "-50%", scale: 1 },
-  },
-};
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+const ICON_R      = 160; // increased icon distance from center
+const LINE_R      = 100; // increased line endpoint distance
+const LINE_DUR    = 700;
+const STAGGER     = 180;
+
+const DIRECTIONS = [
+  { id: "top",    lineEnd: { x: 0,       y: -LINE_R }, iconOffset: { x: -40,       y: -200} },
+  { id: "right",  lineEnd: { x: LINE_R,  y: 0       }, iconOffset: { x: 110,  y: -40       } },
+  { id: "bottom", lineEnd: { x: 0,       y: LINE_R  }, iconOffset: { x: -35,       y: 110} },
+  { id: "left",   lineEnd: { x: -LINE_R, y: 0       }, iconOffset: { x: -190, y: -25       } },
+];
+
+const SOCIALS = [
+  { dir: "top",    href: "https://github.com/sonu595", label: "GitHub", icon: github },
+  { dir: "right",  href: "https://www.instagram.com/code___ez", label: "Instagram", icon: insta },
+  { dir: "bottom", href: "https://wa.me/8279278341", label: "WhatsApp", icon: whatsapp },
+  { dir: "left",   href: "https://x.com/sonu2016841", label: "Twitter", icon: x },
+];
+
+function useLine(tx, ty, delay, triggered) {
+  const [prog, setProg] = useState(0);
+
+  useEffect(() => {
+    if (!triggered) return;
+    let raf, start = null;
+    const step = (ts) => {
+      if (!start) start = ts;
+      const elapsed = ts - start - delay;
+      if (elapsed < 0) { raf = requestAnimationFrame(step); return; }
+      const t    = Math.min(elapsed / LINE_DUR, 1);
+      const ease = 1 - Math.pow(1 - t, 3);
+      setProg(ease);
+      if (t < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [triggered, delay]);
+
+  return { cx: tx * prog, cy: ty * prog, done: prog >= 1 };
+}
+
+function IconLabel({ id, label }) {
+  const base = "absolute bg-black/80 backdrop-blur-sm text-white text-xs font-medium whitespace-nowrap pointer-events-none px-2 py-1 rounded-full";
+  const pos = {
+    top:    "bottom-full left-1/2 -translate-x-1/2 mb-3",
+    right:  "left-full top-1/2 -translate-y-1/2 ml-3",
+    bottom: "top-full left-1/2 -translate-x-1/2 mt-3",
+    left:   "right-full top-1/2 -translate-y-1/2 mr-3",
+  }[id];
+
+  const slideInit = {
+    top:    { opacity: 0, y: 6 },
+    right:  { opacity: 0, x: -6 },
+    bottom: { opacity: 0, y: -6 },
+    left:   { opacity: 0, x: 6 },
+  }[id];
+
+  return (
+    <motion.span
+      className={`${base} ${pos}`}
+      initial={slideInit}
+      animate={{ opacity: 1, x: 0, y: 0 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+    >
+      {label}
+    </motion.span>
+  );
+}
+
+function LineBranch({ direction, index, triggered }) {
+  const { cx, cy, done } = useLine(
+    direction.lineEnd.x,
+    direction.lineEnd.y,
+    index * STAGGER,
+    triggered
+  );
+
+  return (
+    <g>
+      <line
+        x1={0} y1={0} x2={cx} y2={cy}
+        stroke="white" strokeWidth={1.5}
+        strokeLinecap="round" opacity={0.5}
+      />
+      {done && (
+        <motion.circle
+          cx={direction.lineEnd.x} cy={direction.lineEnd.y}
+          r={3} fill="white" opacity={0.4}
+          initial={{ scale: 0 }} animate={{ scale: 1 }}
+          transition={{ duration: 0.2 }}
+        />
+      )}
+    </g>
+  );
+}
+
+function SocialIcon({ dir, social, iconOffset, iconsVisible, hoveredIcon, setHoveredIcon }) {
+  const VB = 300;
+  const isVisible = iconsVisible[dir];
+  const isHovered = hoveredIcon === dir;
+
+  const left = ((VB + iconOffset.x) / (VB * 2)) * 100;
+  const top  = ((VB + iconOffset.y) / (VB * 2)) * 100;
+
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.a
+          href={social.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute z-10 flex items-center justify-center rounded-full bg-gradient-to-br from-white to-gray-100 cursor-pointer shadow-lg"
+          style={{
+            left: `${left}%`,
+            top: `${top}%`,
+            transform: "translate(-50%, -50%)",
+            width: "clamp(3rem, 8vw, 4.5rem)",
+            height: "clamp(3rem, 8vw, 4.5rem)",
+            boxShadow: isHovered
+              ? "0 0 0 8px rgba(255,255,255,0.2), 0 8px 25px rgba(0,0,0,0.2)"
+              : "0 4px 15px rgba(0,0,0,0.1)",
+            transition: "box-shadow 0.3s ease",
+          }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0, opacity: 0 }}
+          transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
+          onMouseEnter={() => setHoveredIcon(dir)}
+          onMouseLeave={() => setHoveredIcon(null)}
+        >
+          <motion.img
+            src={social.icon}
+            alt={social.label}
+            className="w-7 h-7 sm:w-8 sm:h-8"
+            style={{ width: "clamp(1.5rem, 4vw, 2rem)", height: "clamp(1.5rem, 4vw, 2rem)" }}
+            animate={{ scale: isHovered ? 1.15 : 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 18 }}
+          />
+
+          <AnimatePresence>
+            {isHovered && <IconLabel id={dir} label={social.label} />}
+          </AnimatePresence>
+        </motion.a>
+      )}
+    </AnimatePresence>
+  );
+}
+
 
 const Home7 = () => {
   const text = "SAY HELLO ! ";
   const [hoveredIcon, setHoveredIcon] = useState(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const imageRef = useRef(null);
+  const [triggered, setTriggered] = useState(false);
+  const [iconsVisible, setIconsVisible] = useState({});
+  const containerRef = useRef(null);
+  const VB = 300;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
+        if (entry.isIntersecting) { setTriggered(true); observer.disconnect(); }
       },
-      {
-        threshold: 0.3,
-        rootMargin: "0px",
-      }
+      { threshold: 0.3 }
     );
-
-    if (imageRef.current) {
-      observer.observe(imageRef.current);
-    }
-
+    if (containerRef.current) observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (!triggered) return;
+    DIRECTIONS.forEach((dir, i) => {
+      setTimeout(
+        () => setIconsVisible((prev) => ({ ...prev, [dir.id]: true })),
+        i * STAGGER + LINE_DUR
+      );
+    });
+  }, [triggered]);
+
   return (
-    <div className="min-h-screen bg-black flex flex-col">
-      <div className="w-full overflow-hidden pt-16 sm:pt-20">
-        <div className="flex animate-marquee w-max text-white font-bold gap-8 text-6xl sm:text-7xl md:text-9xl lg:text-[10rem]">
-          {Array.from({ length: 15 }).map((_, i) => (
-            <span key={i} className="whitespace-nowrap">
-              {text}
-            </span>
+    <div className="min-h-screen bg-black flex flex-col overflow-x-hidden">
+
+      {/* ── MARQUEE ── */}
+      <div className="w-full overflow-hidden pt-20 sm:pt-24 md:pt-28">
+        <div className="flex animate-marquee w-max text-white font-bold gap-6 sm:gap-8 text-5xl sm:text-7xl md:text-8xl lg:text-9xl">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <span key={i} className="whitespace-nowrap tracking-tighter">{text}</span>
           ))}
-          {Array.from({ length: 15 }).map((_, i) => (
-            <span key={`dup-${i}`} className="whitespace-nowrap">
-              {text}
-            </span>
+          {Array.from({ length: 12 }).map((_, i) => (
+            <span key={`dup-${i}`} className="whitespace-nowrap tracking-tighter">{text}</span>
           ))}
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row items-center md:items-start gap-10 md:gap-0 my-10 sm:my-10 md:my-10 lg:my-10 px-6 py-8 sm:px-10 sm:py-15 md:px-16 md:py-20 lg:px-20 lg:py-30">
-        <div className="w-full md:w-1/2 text-white">
-          <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
+      {/* ── MAIN CONTENT ── */}
+      <div className="flex flex-col lg:flex-row items-center lg:items-center gap-12 lg:gap-16 px-6 py-12 sm:px-10 sm:py-16 md:px-16 md:py-20 lg:px-20 xl:px-28 flex-1">
+
+        {/* Left Text Section */}
+        <div className="w-full lg:w-1/2 text-white space-y-5 sm:space-y-6">
+          <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
             Hey there.
           </p>
-
-          <p className="text-base sm:text-xl md:text-2xl lg:text-3xl text-gray-300 mt-4 sm:mt-6">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 leading-relaxed">
             Got an idea, a project, or a problem to solve? I'm always open to
             building, collaborating, and exploring new opportunities.
           </p>
-
-          <p className="text-base sm:text-xl md:text-2xl lg:text-3xl text-gray-300 mt-4">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 leading-relaxed">
             I enjoy turning ideas into real-world applications and continuously
             improving my skills along the way.
           </p>
-
-          <p className="text-base sm:text-xl md:text-2xl lg:text-3xl font-semibold mt-6">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold text-white pt-3">
             Drop a message — let's make something real.
           </p>
         </div>
 
-<div className="w-full md:w-1/2 flex justify-center  relative overflow-visible">
-  <div
-    ref={imageRef}
-    className="relative group w-48 sm:w-64 md:w-72 lg:w-80 xl:w-96 h-60 sm:h-64 md:h-72 lg:h-80 xl:h-96"
-  >
-    {/* ── RING ── */}
-    <div
-      className="absolute top-1/2 left-1/2 rounded-full border border-white pointer-events-none"
-      style={{
-        width: "140%",
-        height: "140%",
-        transform: "translate(-50%, -50%) scale(0)",
-        opacity: 0,
-        animation: isVisible
-          ? "ringExpand 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.1s forwards"
-          : "none",
-        zIndex: 5,
-      }}
-    />
+        {/* Right Animation Section */}
+        <div
+          ref={containerRef}
+          className="w-full lg:w-1/2 flex justify-center items-center"
+        >
+          <div className="relative w-100 h-100 sm:w-112.5 sm:h-112.5 md:w-125 md:h-125 lg:w-137.5 lg:h-[550px]">
 
-    {/* ── PROFILE IMAGE ── */}
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.8 }}
-      className="w-full h-full"
-    >
-      <img
-        src={contactimg}
-        alt="Contact"
-        className="w-full h-full object-cover rounded-lg grayscale group-hover:grayscale-0 transition-all relative z-10"
-      />
-    </motion.div>
+            {/* SVG Layer - Lines and Profile Image */}
+            <svg
+              width="100%"
+              height="100%"
+              viewBox={`0 0 ${VB * 2} ${VB * 2}`}
+              className="absolute top-0 left-0 overflow-visible"
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <g transform={`translate(${VB}, ${VB})`}>
+                {/* Animated Lines */}
+                {DIRECTIONS.map((dir, i) => (
+                  <LineBranch
+                    key={dir.id}
+                    direction={dir}
+                    index={i}
+                    triggered={triggered}
+                  />
+                ))}
 
-    {/* ── GITHUB — Top ── */}
-    <motion.a
-      href="https://github.com/sonu595"
-      target="_blank"
-      rel="noopener noreferrer"
-      onMouseEnter={() => setHoveredIcon("github")}
-      onMouseLeave={() => setHoveredIcon(null)}
-      className="absolute left-1/2 z-20 flex flex-col items-center gap-1"
-      style={{ top: "-7%", transform: "translate(-50%, -50%)" }}
-      variants={iconVariants.top}
-      initial="hidden"
-      animate={isVisible ? "visible" : "hidden"}
-      transition={{ delay: 0.2, duration: 0.4, ease: "easeOut" }}
-      whileHover={{ scale: 1.1 }}
-    >
-      {hoveredIcon === "github" && (
-        <span className="text-xs text-gray-400 whitespace-nowrap mb-1">GitHub</span>
-      )}
-      <div className="bg-white p-2 rounded-full hover:bg-gray-200 transition-colors">
-        <img className="md:h-10 md:w-10 h-6 w-6" src={github} alt="GitHub" />
-      </div>
-    </motion.a>
+                {/* Profile Image Clip Path */}
+                <defs>
+                  <clipPath id="img-clip">
+                    <circle cx={0} cy={0} r={85} />
+                  </clipPath>
+                </defs>
 
-    {/* ── INSTAGRAM — Right ── */}
-    <motion.a
-      href="https://www.instagram.com/code___ez?igsh=MWhmN2xtZDhnbGlnNA=="
-      target="_blank"
-      rel="noopener noreferrer"
-      onMouseEnter={() => setHoveredIcon("instagram")}
-      onMouseLeave={() => setHoveredIcon(null)}
-      className="absolute top-1/2 z-20 flex flex-col items-center gap-1"
-      style={{ right: "-7%", transform: "translate(50%, -50%)" }}
-      variants={iconVariants.right}
-      initial="hidden"
-      animate={isVisible ? "visible" : "hidden"}
-      transition={{ delay: 0.35, duration: 0.4, ease: "easeOut" }}
-      whileHover={{ scale: 1.1 }}
-    >
-      {hoveredIcon === "instagram" && (
-        <span className="text-xs text-gray-400 whitespace-nowrap">Instagram</span>
-      )}
-      <div className="bg-white p-2 rounded-full hover:bg-gray-200 transition-colors">
-        <img className="md:h-10 md:w-10 h-6 w-6" src={insta} alt="Instagram" />
-      </div>
-    </motion.a>
+                {/* Profile Image - Much Larger */}
+                <motion.image
+                  href={contactimg}
+                  x={-85} y={-85}
+                  width={170} height={170}
+                  clipPath="url(#img-clip)"
+                  preserveAspectRatio="xMidYMid cover"
+                  className="cursor-pointer transition-all duration-500"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.7, ease: "easeOut" }}
+                  style={{ filter: "grayscale(100%)" }}
+                  onMouseEnter={(e) => e.target.style.filter = "grayscale(0%)"}
+                  onMouseLeave={(e) => e.target.style.filter = "grayscale(100%)"}
+                />
 
-    {/* ── WHATSAPP — Bottom ── */}
-    <motion.a
-      href="https://wa.me/8279278341"
-      target="_blank"
-      rel="noopener noreferrer"
-      onMouseEnter={() => setHoveredIcon("whatsapp")}
-      onMouseLeave={() => setHoveredIcon(null)}
-      className="absolute left-1/2 z-20 flex flex-col items-center gap-1"
-      style={{ bottom: "-7%", transform: "translate(-50%, 50%)" }}
-      variants={iconVariants.bottom}
-      initial="hidden"
-      animate={isVisible ? "visible" : "hidden"}
-      transition={{ delay: 0.5, duration: 0.4, ease: "easeOut" }}
-      whileHover={{ scale: 1.1 }}
-    >
-      <div className="bg-white p-2 rounded-full hover:bg-gray-200 transition-colors">
-        <img className="md:h-10 md:w-10 h-6 w-6" src={whatsapp} alt="WhatsApp" />
-      </div>
-      {hoveredIcon === "whatsapp" && (
-        <span className="text-xs text-gray-400 whitespace-nowrap mt-1">WhatsApp</span>
-      )}
-    </motion.a>
+                {/* Glowing ring around profile image */}
+                <circle
+                  cx={0} cy={0} r={88}
+                  fill="none"
+                  stroke="rgba(255,255,255,0.15)"
+                  strokeWidth={2}
+                />
+              </g>
+            </svg>
 
-    {/* ── X / TWITTER — Left ── */}
-    <motion.a
-      href="https://x.com/sonu2016841"
-      target="_blank"
-      rel="noopener noreferrer"
-      onMouseEnter={() => setHoveredIcon("twitter")}
-      onMouseLeave={() => setHoveredIcon(null)}
-      className="absolute top-1/2 z-20 flex flex-col items-center gap-1"
-      style={{ left: "-7%", transform: "translate(-50%, -50%)" }}
-      variants={iconVariants.left}
-      initial="hidden"
-      animate={isVisible ? "visible" : "hidden"}
-      transition={{ delay: 0.65, duration: 0.4, ease: "easeOut" }}
-      whileHover={{ scale: 1.1 }}
-    >
-      {hoveredIcon === "twitter" && (
-        <span className="text-xs text-gray-400 whitespace-nowrap">Twitter / X</span>
-      )}
-      <div className="bg-white p-2 rounded-full hover:bg-gray-200 transition-colors">
-        <img className="md:h-10 md:w-10 h-6 w-6" src={x} alt="X" />
-      </div>
-    </motion.a>
+            {/* HTML Icon Layer */}
+            {DIRECTIONS.map((dir) => {
+              const social = SOCIALS.find((s) => s.dir === dir.id);
+              return (
+                <SocialIcon
+                  key={dir.id}
+                  dir={dir.id}
+                  social={social}
+                  iconOffset={dir.iconOffset}
+                  iconsVisible={iconsVisible}
+                  hoveredIcon={hoveredIcon}
+                  setHoveredIcon={setHoveredIcon}
+                />
+              );
+            })}
 
-  </div>
-</div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
