@@ -6,6 +6,7 @@ import About2 from './About2'
 import About3 from './About3'
 import { image } from 'framer-motion/client'
 import Skills from './Skills'
+import Logomarquee from './logomarquee'
 const About = () => {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
@@ -97,6 +98,7 @@ const About = () => {
 
       <About2 />
       <About3 />
+      <Logomarquee />
       <Skills />
     </>
   )

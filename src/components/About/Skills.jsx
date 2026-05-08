@@ -114,7 +114,7 @@ const SkillItem = ({ skill, index, isInView, dir }) => {
         duration: 1.5,
         ease: "easeOut",
       }}
-      className="group py-4 md:py-5 border-b border-white/5 hover:border-white/15 transition-colors duration-300"
+      className="group py-4 md:py-5  border-b border-white/5 hover:border-white/15 transition-colors duration-300"
     >
       <div className="flex items-center justify-between mb-2.5">
         <span className="text-lg sm:text-xl md:text-2xl lg:text-[1.6rem] font-medium text-white/85 group-hover:text-white transition-colors duration-200">
