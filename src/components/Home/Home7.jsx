@@ -14,8 +14,8 @@ const STAGGER  = 180;   // har line ke beech delay (ms)
 
 // Circle & Image — Desktop (lg)
 const CIRCLE_R_LG   = 250;   // profile circle ka radius (SVG units)
-const IMAGE_SIZE_LG = 350;  // profile image width & height (SVG units) — usually CIRCLE_R_LG * 2
-const GLOW_R_LG     = 250;   // bahari glow ring ka radius
+const IMAGE_SIZE_LG = 330;  // profile image width & height (SVG units) — usually CIRCLE_R_LG * 2
+const GLOW_R_LG     = 180;   // bahari glow ring ka radius
 
 // Circle & Image — Mobile (sm, max-width: 640px)
 const CIRCLE_R_SM   = 174;
