@@ -6,25 +6,82 @@ import whatsapp from "../../assets/whatsapp.svg";
 import insta from "../../assets/instagram.svg";
 import { motion, AnimatePresence } from "framer-motion";
 
-// ─── CONFIG ───────────────────────────────────────────────────────────────────
-const ICON_R      = 160; // increased icon distance from center
-const LINE_R      = 100; // increased line endpoint distance
-const LINE_DUR    = 700;
-const STAGGER     = 180;
+// Line animation settings
+const ICON_R   = 160;   // reference radius (icon offset ke liye base)
+const LINE_R   = 200;   // line kitni door jaaye center se
+const LINE_DUR = 700;   // line animation duration (ms)
+const STAGGER  = 180;   // har line ke beech delay (ms)
 
+// Circle & Image — Desktop (lg)
+const CIRCLE_R_LG   = 250;   // profile circle ka radius (SVG units)
+const IMAGE_SIZE_LG = 350;  // profile image width & height (SVG units) — usually CIRCLE_R_LG * 2
+const GLOW_R_LG     = 250;   // bahari glow ring ka radius
+
+// Circle & Image — Mobile (sm, max-width: 640px)
+const CIRCLE_R_SM   = 174;
+const IMAGE_SIZE_SM = 320;
+const GLOW_R_SM     = 170;
+
+// Icon button size
+const ICON_BTN_SIZE = 64;   // px — white circle button ka size
+const ICON_IMG_SIZE = 28;   // px — andar wali icon image ka size
+
+// Icon positions (SVG units, center = 0,0)
+// iconOffset      → desktop
+// iconOffsetMob   → mobile
 const DIRECTIONS = [
-  { id: "top",    lineEnd: { x: 0,       y: -LINE_R }, iconOffset: { x: -40,       y: -200} },
-  { id: "right",  lineEnd: { x: LINE_R,  y: 0       }, iconOffset: { x: 110,  y: -40       } },
-  { id: "bottom", lineEnd: { x: 0,       y: LINE_R  }, iconOffset: { x: -35,       y: 110} },
-  { id: "left",   lineEnd: { x: -LINE_R, y: 0       }, iconOffset: { x: -190, y: -25       } },
+  {
+    id: "top",
+    lineEnd: { x: 0, y: -LINE_R },
+    iconOffset:    { x: -35,  y: -280 },
+    iconOffsetMob: { x: -60,  y: -270 },
+  },
+  {
+    id: "right",
+    lineEnd: { x: LINE_R, y: 0 },
+    iconOffset:    { x: 210,  y: -35  },
+    iconOffsetMob: { x: 210,   y: -50  },
+  },
+  {
+    id: "bottom",
+    lineEnd: { x: 0, y: LINE_R },
+    iconOffset:    { x: -33,  y: 210  },
+    iconOffsetMob: { x: -60,  y: 170   },
+  },
+  {
+    id: "left",
+    lineEnd: { x: -LINE_R, y: 0 },
+    iconOffset:    { x: -280, y: -35  },
+    iconOffsetMob: { x: -330, y: -48  },
+  },
 ];
 
 const SOCIALS = [
-  { dir: "top",    href: "https://github.com/sonu595", label: "GitHub", icon: github },
-  { dir: "right",  href: "https://www.instagram.com/code___ez", label: "Instagram", icon: insta },
-  { dir: "bottom", href: "https://wa.me/8279278341", label: "WhatsApp", icon: whatsapp },
-  { dir: "left",   href: "https://x.com/sonu2016841", label: "Twitter", icon: x },
+  { dir: "top",    href: "https://github.com/sonu595",          label: "GitHub",    icon: github  },
+  { dir: "right",  href: "https://www.instagram.com/code___ez", label: "Instagram", icon: insta   },
+  { dir: "bottom", href: "https://wa.me/8279278341",            label: "WhatsApp",  icon: whatsapp},
+  { dir: "left",   href: "https://x.com/sonu2016841",           label: "Twitter",   icon: x       },
 ];
+
+// ─────────────────────────────────────────────
+//  Hook — window width detect karne ke liye
+// ─────────────────────────────────────────────
+
+function useWindowWidth() {
+  const [width, setWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1024
+  );
+  useEffect(() => {
+    const handler = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+  return width;
+}
+
+// ─────────────────────────────────────────────
+//  Line animation hook
+// ─────────────────────────────────────────────
 
 function useLine(tx, ty, delay, triggered) {
   const [prog, setProg] = useState(0);
@@ -47,6 +104,10 @@ function useLine(tx, ty, delay, triggered) {
 
   return { cx: tx * prog, cy: ty * prog, done: prog >= 1 };
 }
+
+// ─────────────────────────────────────────────
+//  Icon tooltip label
+// ─────────────────────────────────────────────
 
 function IconLabel({ id, label }) {
   const base = "absolute bg-black/80 backdrop-blur-sm text-white text-xs font-medium whitespace-nowrap pointer-events-none px-2 py-1 rounded-full";
@@ -77,6 +138,10 @@ function IconLabel({ id, label }) {
   );
 }
 
+// ─────────────────────────────────────────────
+//  Line branch component
+// ─────────────────────────────────────────────
+
 function LineBranch({ direction, index, triggered }) {
   const { cx, cy, done } = useLine(
     direction.lineEnd.x,
@@ -104,10 +169,17 @@ function LineBranch({ direction, index, triggered }) {
   );
 }
 
-function SocialIcon({ dir, social, iconOffset, iconsVisible, hoveredIcon, setHoveredIcon }) {
+// ─────────────────────────────────────────────
+//  Social icon component
+// ─────────────────────────────────────────────
+
+function SocialIcon({ dir, social, direction, iconsVisible, hoveredIcon, setHoveredIcon, isMobile }) {
   const VB = 300;
   const isVisible = iconsVisible[dir];
   const isHovered = hoveredIcon === dir;
+
+  // Mobile ya desktop ke hisaab se offset choose karo
+  const iconOffset = isMobile ? direction.iconOffsetMob : direction.iconOffset;
 
   const left = ((VB + iconOffset.x) / (VB * 2)) * 100;
   const top  = ((VB + iconOffset.y) / (VB * 2)) * 100;
@@ -122,10 +194,10 @@ function SocialIcon({ dir, social, iconOffset, iconsVisible, hoveredIcon, setHov
           className="absolute z-10 flex items-center justify-center rounded-full bg-gradient-to-br from-white to-gray-100 cursor-pointer shadow-lg"
           style={{
             left: `${left}%`,
-            top: `${top}%`,
+            top:  `${top}%`,
             transform: "translate(-50%, -50%)",
-            width: "clamp(3rem, 8vw, 4.5rem)",
-            height: "clamp(3rem, 8vw, 4.5rem)",
+            width:  `${ICON_BTN_SIZE}px`,
+            height: `${ICON_BTN_SIZE}px`,
             boxShadow: isHovered
               ? "0 0 0 8px rgba(255,255,255,0.2), 0 8px 25px rgba(0,0,0,0.2)"
               : "0 4px 15px rgba(0,0,0,0.1)",
@@ -141,12 +213,10 @@ function SocialIcon({ dir, social, iconOffset, iconsVisible, hoveredIcon, setHov
           <motion.img
             src={social.icon}
             alt={social.label}
-            className="w-7 h-7 sm:w-8 sm:h-8"
-            style={{ width: "clamp(1.5rem, 4vw, 2rem)", height: "clamp(1.5rem, 4vw, 2rem)" }}
+            style={{ width: `${ICON_IMG_SIZE}px`, height: `${ICON_IMG_SIZE}px` }}
             animate={{ scale: isHovered ? 1.15 : 1 }}
             transition={{ type: "spring", stiffness: 300, damping: 18 }}
           />
-
           <AnimatePresence>
             {isHovered && <IconLabel id={dir} label={social.label} />}
           </AnimatePresence>
@@ -156,15 +226,27 @@ function SocialIcon({ dir, social, iconOffset, iconsVisible, hoveredIcon, setHov
   );
 }
 
+// ─────────────────────────────────────────────
+//  Main component
+// ─────────────────────────────────────────────
 
 const Home7 = () => {
   const text = "SAY HELLO ! ";
-  const [hoveredIcon, setHoveredIcon] = useState(null);
-  const [triggered, setTriggered] = useState(false);
+  const [hoveredIcon, setHoveredIcon]   = useState(null);
+  const [triggered, setTriggered]       = useState(false);
   const [iconsVisible, setIconsVisible] = useState({});
   const containerRef = useRef(null);
   const VB = 300;
 
+  const windowWidth = useWindowWidth();
+  const isMobile    = windowWidth < 640; // sm breakpoint
+
+  // Responsive values
+  const circleR   = isMobile ? CIRCLE_R_SM   : CIRCLE_R_LG;
+  const imageSize = isMobile ? IMAGE_SIZE_SM  : IMAGE_SIZE_LG;
+  const glowR     = isMobile ? GLOW_R_SM      : GLOW_R_LG;
+
+  // Intersection observer — animation tab shuru ho jab section visible ho
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -176,6 +258,7 @@ const Home7 = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Icons ko stagger ke saath visible karo
   useEffect(() => {
     if (!triggered) return;
     DIRECTIONS.forEach((dir, i) => {
@@ -222,14 +305,14 @@ const Home7 = () => {
           </p>
         </div>
 
-        {/* Right Animation Section */}
+        {/* Right — SVG + Icons */}
         <div
           ref={containerRef}
           className="w-full lg:w-1/2 flex justify-center items-center"
         >
-          <div className="relative w-100 h-100 sm:w-112.5 sm:h-112.5 md:w-125 md:h-125 lg:w-137.5 lg:h-[550px]">
+          <div className="relative w-100 h-100 sm:w-112.5 sm:h-112.5 md:w-125 md:h-125 lg:w-137.5 lg:h-137.5">
 
-            {/* SVG Layer - Lines and Profile Image */}
+            {/* SVG Layer — Lines & Profile Image */}
             <svg
               width="100%"
               height="100%"
@@ -238,6 +321,7 @@ const Home7 = () => {
               preserveAspectRatio="xMidYMid meet"
             >
               <g transform={`translate(${VB}, ${VB})`}>
+
                 {/* Animated Lines */}
                 {DIRECTIONS.map((dir, i) => (
                   <LineBranch
@@ -248,35 +332,36 @@ const Home7 = () => {
                   />
                 ))}
 
-                {/* Profile Image Clip Path */}
+                {/* Profile Image */}
                 <defs>
                   <clipPath id="img-clip">
-                    <circle cx={0} cy={0} r={85} />
+                    <circle cx={0} cy={0} r={circleR} />
                   </clipPath>
                 </defs>
 
-                {/* Profile Image - Much Larger */}
                 <motion.image
                   href={contactimg}
-                  x={-85} y={-85}
-                  width={170} height={170}
+                  x={-(imageSize / 2)}
+                  y={-(imageSize / 2)}
+                  width={imageSize}
+                  height={imageSize}
                   clipPath="url(#img-clip)"
-                  preserveAspectRatio="xMidYMid cover"
+                  preserveAspectRatio="xMidYMid slice"
                   className="cursor-pointer transition-all duration-500"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.7, ease: "easeOut" }}
                   style={{ filter: "grayscale(100%)" }}
-                  onMouseEnter={(e) => e.target.style.filter = "grayscale(0%)"}
-                  onMouseLeave={(e) => e.target.style.filter = "grayscale(100%)"}
+                  onMouseEnter={(e) => (e.target.style.filter = "grayscale(0%)")}
+                  onMouseLeave={(e) => (e.target.style.filter = "grayscale(100%)")}
                 />
 
-                {/* Glowing ring around profile image */}
+                {/* Glow ring */}
                 <circle
-                  cx={0} cy={0} r={88}
+                  cx={0} cy={0} r={glowR}
                   fill="none"
-                  stroke="rgba(255,255,255,0.15)"
-                  strokeWidth={2}
+                  stroke="rgba(255,255,255,1)"
+                  strokeWidth={3}
                 />
               </g>
             </svg>
@@ -289,10 +374,11 @@ const Home7 = () => {
                   key={dir.id}
                   dir={dir.id}
                   social={social}
-                  iconOffset={dir.iconOffset}
+                  direction={dir}
                   iconsVisible={iconsVisible}
                   hoveredIcon={hoveredIcon}
                   setHoveredIcon={setHoveredIcon}
+                  isMobile={isMobile}
                 />
               );
             })}
