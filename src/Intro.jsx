@@ -5,7 +5,7 @@ const Intro = ({ onComplete }) => {
 
   // Auto-dismiss after 2.5s
   useEffect(() => {
-    const timer = setTimeout(onComplete, 2500);
+    const timer = setTimeout(onComplete, 1000);
     return () => clearTimeout(timer);
   }, [onComplete]);
 

@@ -19,9 +19,9 @@ const Home3 = () => {
       {/* Bio text */}
       <p className="text-center text-xl flex-wrap sm:text-lg md:text-xl lg:text-2xl xl:text-3xl leading-relaxed md:leading-loose text-gray-300 font-light px-2">
         I have been working for the past
-        <span className="text-white font-bold mx-1">1+ years</span>
+        <span className="text-white font-bold mx-1">2+ years</span>
         with
-        <span className="text-white font-bold mx-1">Javascript/java</span>.
+        <span className="text-white font-bold mx-1">java & javascript</span>.
         I've been writing and debugging code and connecting RESTful APIs using
         <span className="text-white font-bold mx-1">Springboot, React and postgresql</span>
         for a couple of months. and currently i am working on a production redy web app.
