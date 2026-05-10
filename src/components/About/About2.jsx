@@ -2,7 +2,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import SlideButton from '../../hooks/Button'
 import resume from '../../assets/Sonu_Singh_Resume.pdf'
-import img from '../../assets/laptop.jpg'
+import img from '../../assets/laptop4.jpeg'
 import mobileImg from '../../assets/laptop2.jpg'
 
 const About2 = () => {
@@ -57,7 +57,7 @@ const About2 = () => {
         <motion.img
           src={img}
           alt="laptop"
-          className="hidden sm:block mt-6 w-full max-w-4xl rounded-xl shadow-lg object-cover"
+          className="hidden sm:block mt-6 w-full max-w-full rounded-xl shadow-lg object-cover"
           initial={{ scale: 1.2 }}
           whileInView={{ scale: 1 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
