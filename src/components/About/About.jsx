@@ -1,6 +1,5 @@
 import React, { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-// import img from '../../assets/b_change_my_image_back (2).jpeg'
 import img from '../../assets/Remove background project (4).png'
 import About2 from './About2'
 import About3 from './About3'

@@ -1,6 +1,7 @@
 /* index.css */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Inter:wght@300;500&family=JetBrains+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Inter:wght@300;500&family=JetBrains+Mono&family=Playfair+Display:ital,wght@0,400;1,400&display=swap');
 @import "tailwindcss";
+
 
 html, body {
   margin: 0;
@@ -20,6 +21,11 @@ html, body {
   .cursor {
     display: none;
   }
+}
+
+.font-style {
+  font-family: 'Bodoni Moda', serif;
+  /* font-style: italic; */
 }
 
 .cursor {
