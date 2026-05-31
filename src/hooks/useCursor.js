@@ -3,13 +3,14 @@ import { useEffect, useRef, useCallback } from 'react';
 const useCursor = (options = {}) => {
   const {
     selector = '.hover-text',
-    defaultSize = '30px',
+    defaultSize = '40px',
     snapDuration = '0.45s',
     releaseDuration = '0.25s',
   } = options;
 
   const isHoveringRef = useRef(false);
   const cursorRef = useRef(null);
+  const cursorDotRef = useRef(null);
   const listenersRef = useRef([]);
   const rafRef = useRef(null);
   const mousePos = useRef({ x: 0, y: 0 });
@@ -24,6 +25,18 @@ const useCursor = (options = {}) => {
       document.body.appendChild(el);
     }
     cursorRef.current = el;
+    return el;
+  }, []);
+
+  const getCursorDot = useCallback(() => {
+    if (cursorDotRef.current) return cursorDotRef.current;
+    let el = document.querySelector('.cursor-dot');
+    if (!el) {
+      el = document.createElement('div');
+      el.className = 'cursor-dot';
+      document.body.appendChild(el);
+    }
+    cursorDotRef.current = el;
     return el;
   }, []);
 
@@ -48,8 +61,11 @@ const useCursor = (options = {}) => {
   }, [getCursor]);
 
   const onMouseMove = useCallback((e) => {
+    const cursorDot = getCursorDot();
     mousePos.current = { x: e.clientX, y: e.clientY };
-  }, []);
+    cursorDot.style.left = `${e.clientX}px`;
+    cursorDot.style.top = `${e.clientY}px`;
+  }, [getCursorDot]);
 
   const onEnter = useCallback((el) => {
     const cursor = getCursor();
@@ -100,6 +116,7 @@ const useCursor = (options = {}) => {
 
   useEffect(() => {
     getCursor();
+    getCursorDot();
     document.addEventListener('mousemove', onMouseMove);
     startFollowLoop();
     attachListeners();
@@ -116,9 +133,9 @@ const useCursor = (options = {}) => {
         el.removeEventListener('mouseleave', leave);
       });
     };
-  }, [getCursor, onMouseMove, startFollowLoop, attachListeners]);
+  }, [getCursor, getCursorDot, onMouseMove, startFollowLoop, attachListeners]);
 
-  return { isHoveringRef, cursorRef };
+  return { isHoveringRef, cursorRef, cursorDotRef };
 };
 
 export default useCursor;
