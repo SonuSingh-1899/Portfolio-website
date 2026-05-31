@@ -25,21 +25,21 @@ const Projects = () => {
       label: "Omnexa Chat",
       path: "/omnexa",
       image: omnexaBanner,
-      position: "top-[12%] left-[2%]",
+      position: "top-[12%] md:left-[2%] left-[5%]",
     },
     {
       id: 2,
       label: "Limestreet",
       path: "/hrms",
       image: limestreetBanner,
-      position: "top-1/2 -translate-y-1/3 left-[58%]",
+      position: "top-1/2 -translate-y-1/3 md:left-[58%] left-[5%]",
     },
     {
       id: 3,
       label: "HR Management",
       path: "/portfolio",
       image: hrManagementBanner,
-      position: "md:bottom-[4%] bottom-[8%] md:left-[4%]",
+      position: "md:bottom-[4%] bottom-[8%] md:left-[4%] left-[2%]",
     },
   ];
 
